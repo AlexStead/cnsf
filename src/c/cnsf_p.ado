@@ -59,7 +59,7 @@ program cnsf_p
 		else local add_sv`i'		=	`add_sv`i''
 		scalar `sv`i''			=	`add_sv`i''
 		gen `typlist' `u`i''		=	(`sv`i''*`su')/sqrt(`sv`i''^2+`su'^2)*(normalden(`resid'*(`su'/`sv`i'')/sqrt(`sv`i''^2+`su'^2))/normal(-`s'*`resid'*(`su'/`sv`i'')/sqrt(`sv`i''^2+`su'^2))-`s'*`resid'*(`su'/`sv`i'')/sqrt(`sv`i''^2+`su'^2)) if `touse'
-		gen `typlist' `exp_u`i''	=	exp(1/2*`sv`i''^2*`su'^2/(`sv`i''^2+`su'^2)+`s'*(`s'*`su'^2*`resid')/(`sv`i''^2+`su'^2))*(normal(((`s'*`su'^2*`resid')/(`sv`i''^2+`su'^2)/sqrt(`sv`i''^2*`su'^2/(`sv`i''^2+`su'^2)))+`s'*sqrt(`sv`i''^2*`su'^2/(`sv`i''^2+`su'^2)))/normal((`s'*`su'^2*`resid')/(`sv`i''^2+`su'^2)/sqrt(`sv`i''^2*`su'^2/(`sv`i''^2+`su'^2))))
+		gen `typlist' `exp_u`i''	=	(1-normal((`su')*(`sv`i'')/sqrt((`sv`i'')^2+(`su')^2)+`s'*(`resid')*(`su')/(`sv`i'')/sqrt((`sv`i'')^2+(`su')^2)))/(1-normal(`s'*(`resid')*(`su')/(`sv`i'')/sqrt((`sv`i'')^2+(`su')^2)))*exp(`s'*(`resid')*((`su')/sqrt((`sv`i'')^2+(`su')^2))^2+1/2*((`su')*(`sv`i'')/sqrt((`sv`i'')^2+(`su')^2))^2)
 	}
 	forval i				=	1/`probs' {
 		scalar `prob`i''		=	invlogit([logprob`i']_cons)
@@ -92,7 +92,7 @@ program cnsf_p
 		gen `typlist' `varlist'		=	exp(-`u_weighted')	if `touse'
 	}
 	if "`bc'" != ""{
-		gen `typlist' `varlist'		=	exp(-`u_weighted')	if `touse'
+		gen `typlist' `varlist'		=	`exp_u_weighted'	if `touse'
 	}
 	if "`residuals'" != ""{
 		gen `typlist' `varlist'		=	`resid'			if `touse'
